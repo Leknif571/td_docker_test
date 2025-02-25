@@ -1,0 +1,28 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3000"
+    networks:
+      - backend
+  db:
+    image: redis:7.0.0
+    restart: unless-stopped
+    networks:
+      - backend
+    # ports:
+    #   - "6379:6379" Non car on veut seulement l'exposer a l'interieur du reseau
+    # Pas besoin de l'exposer a l'exterieur
+    volumes:
+      - data_redis:/data
+
+  static:
+    image: nginx:1.17
+    volumes:
+      - ./assets:/usr/share/nginx/html
+    ports:
+      - "80:80"
+volumes:
+    data_redis:
+networks:
+    backend:
